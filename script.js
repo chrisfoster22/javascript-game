@@ -152,17 +152,15 @@ function attack() {
 	var currentFrame = 0;
 
 	var didHit = setInterval(function() {
-		if (currentFrame < 100) {
+		if (currentFrame < 200) {
 			currentFrame += 1;
 		}
-		var bulletLeft = ((bulletDestX / 100) * currentFrame) + left;
-		var bulletTop = (bulletDestY / 100 * currentFrame) + top;
-		if (bulletLeft > 0 && bulletLeft < bulletDestX && bulletTop > 0) {
-		// console.log("I started at [", left, top, "] I am currently at [", bulletLeft, bulletTop, "] I am going to [", bulletDestX, bulletDestY, "]");
-		}
+		var bulletLeft = (((bulletDestX - left) / 200) * currentFrame) + left;
+		var bulletTop = (((bulletDestY - top) / 200) * currentFrame) + top;
+		// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", bulletLeft, bulletTop, "] I am going to [", bulletDestX, bulletDestY, "]");
 		// console.log(bulletLeft, bulletTop);
 		didItHit(bulletLeft, bulletTop);
-	}, 10);
+	}, 1);
 
 	setTimeout(function() {
 		bullet.remove();
@@ -180,19 +178,20 @@ function didItHit(left, top) {
 
 	hitBox.forEach(function(element) {
 		// console.log(element, left, top)
-		if (Math.abs(element[0] - left) <= 2 && Math.abs(element[1] - top) <= 2) {
-			document.add
-		console.log("HIT!!!");
-		var bullet = document.createElement("div");
-		var random = Math.floor(Math.random() * 1000000);
-		var bulletRandom = 'bullet' + random;
-		var bulletStyles = document.createElement('style');
-		bulletStyles.type = 'text/css';
-		bullet.classList.add("bullet", bulletRandom);
-		bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
-		// document.getElementsByTagName('head')[0].appendChild(bulletStyles);
+		// if (Math.abs(element[0] - left) <= 2 && Math.abs(element[1] - top) <= 2) {
+		if (element[0] === left && element[1] === top) {
+			// document.add
+			console.log("HIT!!!");
+			var bullet = document.createElement("div");
+			var random = Math.floor(Math.random() * 1000000);
+			var bulletRandom = 'bullet' + random;
+			var bulletStyles = document.createElement('style');
+			bulletStyles.type = 'text/css';
+			bullet.classList.add("bullet", bulletRandom);
+			bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
+			document.getElementsByTagName('head')[0].appendChild(bulletStyles);
 
-		hero.prepend(bullet);
+			hero.prepend(bullet);
 		}
 	})
 }

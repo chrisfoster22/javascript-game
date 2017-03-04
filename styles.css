@@ -30,10 +30,10 @@ body {
 
 .bullet {
 	position: absolute;
-	width: 10px;
+	width: 5px;
 	/*left: 0;*/
 	/*top: 0;*/
-	height: 10px;
+	height: 5px;
 	background-color: red;
 	-webkit-transition: all 1s linear;
    -moz-transition: all 1s linear;

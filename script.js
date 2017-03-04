@@ -24,7 +24,6 @@ document.addEventListener("keydown", function(event) {
 document.addEventListener("mousemove", function(event) {
 	mouseX = event.pageX;
 	mouseY = event.pageY;
-	console.log(mouseX, mouseY);
 });
 
 document.addEventListener("keyup", function(event) {
@@ -96,30 +95,51 @@ function move(direction, value, movementAction) {
 
 
 function attack() {
-	// var beginLeft = hero.style.left;
-	// var beginTop = hero.style.top;
+
 	var style = document.createElement('style');
 	style.type = 'text/css';
 	var left = parseInt(hero.style["left"].split("px")[0]);
 	var top = parseInt(hero.style["top"].split("px")[0]);
+
+
+	var p1 = {
+		x: left,
+		y: top
+	};
+
+	var p2 = {
+		x: mouseX,
+		y: mouseY
+	};
+
+	// angle in radians
+	var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+	var x2 = p1.x + Math.cos(angleRadians) * 300;
+	var y2 = p1.y + Math.sin(angleRadians) * 300;
+
+	console.log(x2, y2);
+
+
+
+
 	var random = Math.floor(Math.random() * 1000000);
 	var classRandom = 'fired' + random;
 	var bulletRandom = 'bullet' + random;
-	style.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (mouseX * 4)  + 'px; top: ' + (mouseY  * 4) + 'px; }';
+	style.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (x2)  + 'px; top: ' + (y2) + 'px; }';
 	document.getElementsByTagName('head')[0].appendChild(style);
 
 	var bullet = document.createElement("div");
 	bullet.classList.add("bullet", bulletRandom);
-	// bullet.style.top = beginTop;
-	// console.log(bullet.style)
+
 	hero.prepend(bullet);
-	// appendedBullet = document.getElementsByClassName("bullet")[0];
+
+	var hypX = mouseX - left;
+	var hypY = mouseY - top;
 
 
 	setTimeout(function() {
 		bullet.classList.add(classRandom)
 	}, 20)
 
-	// appendedBullet.style.left = "100px";
-	// console.log(appendedBullet.style)
 }

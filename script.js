@@ -2,6 +2,17 @@ var hero = document.getElementsByClassName("hero")[0];
 hero.style.left = "0px";
 hero.style.top = "0px";
 
+var enemy = document.getElementsByClassName("enemy")[0];
+enemy.left = 400;
+enemy.top = 300;
+
+var hitBox = [];
+for (var i = 0; i < 50; i++) {
+	for (var j = 0; j < 50; j++) {
+	hitBox.push([enemy.left + i, enemy.top + j])
+	}
+}
+
 var movement = {
 	movingUp: false,
 	movingDown: false,
@@ -96,8 +107,8 @@ function move(direction, value, movementAction) {
 
 function attack() {
 
-	var style = document.createElement('style');
-	style.type = 'text/css';
+	var bulletStyles = document.createElement('style');
+	bulletStyles.type = 'text/css';
 	var left = parseInt(hero.style["left"].split("px")[0]);
 	var top = parseInt(hero.style["top"].split("px")[0]);
 
@@ -115,19 +126,15 @@ function attack() {
 	// angle in radians
 	var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 
-	var x2 = p1.x + Math.cos(angleRadians) * 300;
-	var y2 = p1.y + Math.sin(angleRadians) * 300;
-
-	console.log(x2, y2);
-
-
-
+	var bulletDestX = p1.x + Math.cos(angleRadians) * 300;
+	var bulletDestY = p1.y + Math.sin(angleRadians) * 300;
 
 	var random = Math.floor(Math.random() * 1000000);
 	var classRandom = 'fired' + random;
 	var bulletRandom = 'bullet' + random;
-	style.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (x2)  + 'px; top: ' + (y2) + 'px; }';
-	document.getElementsByTagName('head')[0].appendChild(style);
+	// bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (bulletDestX)  + 'px; top: ' + (bulletDestY) + 'px; }';
+	bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (bulletDestX - left)  + 'px, ' + (bulletDestY - top) + 'px); }';
+	document.getElementsByTagName('head')[0].appendChild(bulletStyles);
 
 	var bullet = document.createElement("div");
 	bullet.classList.add("bullet", bulletRandom);
@@ -140,6 +147,52 @@ function attack() {
 
 	setTimeout(function() {
 		bullet.classList.add(classRandom)
-	}, 20)
+	}, 20);
 
+	var currentFrame = 0;
+
+	var didHit = setInterval(function() {
+		if (currentFrame < 100) {
+			currentFrame += 1;
+		}
+		var bulletLeft = ((bulletDestX / 100) * currentFrame) + left;
+		var bulletTop = (bulletDestY / 100 * currentFrame) + top;
+		if (bulletLeft > 0 && bulletLeft < bulletDestX && bulletTop > 0) {
+		// console.log("I started at [", left, top, "] I am currently at [", bulletLeft, bulletTop, "] I am going to [", bulletDestX, bulletDestY, "]");
+		}
+		// console.log(bulletLeft, bulletTop);
+		didItHit(bulletLeft, bulletTop);
+	}, 10);
+
+	setTimeout(function() {
+		bullet.remove();
+		bulletStyles.remove();
+		clearInterval(didHit);
+
+	}, 1000)
+
+}
+
+function didItHit(left, top) {
+	left = Math.round(left);
+	top = Math.round(top);
+	// console.log(left, top)
+
+	hitBox.forEach(function(element) {
+		// console.log(element, left, top)
+		if (Math.abs(element[0] - left) <= 2 && Math.abs(element[1] - top) <= 2) {
+			document.add
+		console.log("HIT!!!");
+		var bullet = document.createElement("div");
+		var random = Math.floor(Math.random() * 1000000);
+		var bulletRandom = 'bullet' + random;
+		var bulletStyles = document.createElement('style');
+		bulletStyles.type = 'text/css';
+		bullet.classList.add("bullet", bulletRandom);
+		bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
+		// document.getElementsByTagName('head')[0].appendChild(bulletStyles);
+
+		hero.prepend(bullet);
+		}
+	})
 }

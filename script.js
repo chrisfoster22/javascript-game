@@ -7,11 +7,28 @@ enemy.left = 400;
 enemy.top = 300;
 
 var hitBox = [];
+
+
+// **** CIRCULAR HITBOX
+
 for (var i = 0; i < 50; i++) {
-	for (var j = 0; j < 50; j++) {
-	hitBox.push([enemy.left + i, enemy.top + j])
-	}
+	// for (var j = 0; j < 50; j++) {
+    xValue = (425 + 25 * Math.cos(2 * Math.PI * i / 50));
+    yValue = (325 + 25 * Math.sin(2 * Math.PI * i / 50));
+	hitBox.push([Math.round(xValue), Math.round(yValue)]);
 }
+
+// **** END
+
+// **** SQUARE HITBOX
+
+// for (var i = 0; i < 50; i++) {
+// 	for (var j = 0; j < 50; j++) {
+// 	hitBox.push([enemy.left + i, enemy.top + j])
+// 	}
+// }
+
+// **** END
 
 var movement = {
 	movingUp: false,
@@ -178,8 +195,8 @@ function didItHit(left, top) {
 
 	hitBox.forEach(function(element) {
 		// console.log(element, left, top)
-		// if (Math.abs(element[0] - left) <= 2 && Math.abs(element[1] - top) <= 2) {
-		if (element[0] === left && element[1] === top) {
+		if (Math.abs(element[0] - left) <= 1 && Math.abs(element[1] - top) <= 1) {
+		// if (element[0] === left && element[1] === top) {
 			// document.add
 			console.log("HIT!!!");
 			var bullet = document.createElement("div");

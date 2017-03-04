@@ -4,6 +4,9 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 body {
 	position: relative;
 	height: 1000px;
+	background-image: url('stone-floor.jpg');
+	background-repeat: repeat;
+	background-size: 100px;
 }
 
 
@@ -14,3 +17,28 @@ body {
 	height: 50px;
 	border-radius: 50%;
 }
+
+.bullet {
+	position: absolute;
+	width: 10px;
+	/*left: 0;*/
+	/*top: 0;*/
+	height: 10px;
+	background-color: red;
+	-webkit-transition: all 1s linear;
+   -moz-transition: all 1s linear;
+	-ms-transition: all 1s linear;
+	 -o-transition: all 1s linear;
+		transition: all 1s linear;
+}
+
+/*.fired {*/
+	/*transition: all 1s;*/
+	/*left: 200px;*/
+/*}*/
+
+
+/*@keyframes fire {
+    from {left: 0px}
+    to {left: 1000px}
+}*/

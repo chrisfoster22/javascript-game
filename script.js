@@ -1,10 +1,10 @@
 
-var hero = new Hero("hero", [0, 0], true);
-var enemy = new Hero("enemy", [400, 300]);
+var hero = new Hero("hero", [0, 0], 3, true);
+var enemy = new Hero("enemy", [400, 300], 5);
 
 hero.target = enemy;
 
-var mouseX, mouseY;
+var mouseX = 1, mouseY = 1;
 
 
 document.addEventListener("mousemove", function(event) {
@@ -14,9 +14,10 @@ document.addEventListener("mousemove", function(event) {
 
 
 
-function Hero(domNode, startingPosition, controlling) {
+function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
+	hero.speed = speed;
 
 	hero.target;
 
@@ -32,9 +33,8 @@ function Hero(domNode, startingPosition, controlling) {
 
 	function setup() {
 		hero.domNode = document.getElementsByClassName(domNode)[0];
-		console.log(domNode);
-			hero.domNode.style.left = startingPosition[0] + "px";
-			hero.domNode.style.top = startingPosition[1] + "px";
+		hero.domNode.style.left = startingPosition[0] + "px";
+		hero.domNode.style.top = startingPosition[1] + "px";
 
 		hero.left;
 
@@ -50,7 +50,6 @@ function Hero(domNode, startingPosition, controlling) {
 		var radius = width / 2;
 
 		for (var i = 0; i < width; i++) {
-			// for (var j = 0; j < 50; j++) {
 		    xValue = (centerX + radius * Math.cos(2 * Math.PI * i / width));
 		    yValue = (centerY + radius * Math.sin(2 * Math.PI * i / width));
 			hitBox.push([Math.round(xValue), Math.round(yValue)]);
@@ -99,7 +98,7 @@ function Hero(domNode, startingPosition, controlling) {
 				if (hero.movement.movingLeft === false) {
 					hero.movement.movingLeft = true;
 					currentlyMovingLeft = setInterval(function() {
-						move("left", -5, "movingLeft")
+						move("left", -(hero.speed), "movingLeft")
 					}, 10)
 				}
 				break;
@@ -107,7 +106,7 @@ function Hero(domNode, startingPosition, controlling) {
 				if (hero.movement.movingUp === false) {
 					hero.movement.movingUp = true;
 					currentlyMovingUp = setInterval(function() {
-						move("top", -5, "movingUp")
+						move("top", -(hero.speed), "movingUp")
 					}, 10)
 				}
 				break;
@@ -115,7 +114,7 @@ function Hero(domNode, startingPosition, controlling) {
 				if (hero.movement.movingRight === false) {
 					hero.movement.movingRight = true;
 					currentlyMovingRight = setInterval(function() {
-						move("left", 5, "movingRight")
+						move("left", hero.speed, "movingRight")
 					}, 10)
 				}
 				break;
@@ -123,7 +122,7 @@ function Hero(domNode, startingPosition, controlling) {
 				if (hero.movement.movingDown === false) {
 					hero.movement.movingDown = true;
 					currentlyMovingDown = setInterval(function() {
-						move("top", 5, "movingDown")
+						move("top", hero.speed, "movingDown")
 					}, 10)
 				}
 				break;
@@ -160,8 +159,8 @@ function Hero(domNode, startingPosition, controlling) {
 		// angle in radians
 		var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 
-		var bulletDestX = p1.x + Math.cos(angleRadians) * 300;
-		var bulletDestY = p1.y + Math.sin(angleRadians) * 300;
+		var bulletDestX = p1.x + Math.cos(angleRadians) * 1000;
+		var bulletDestY = p1.y + Math.sin(angleRadians) * 1000;
 
 		var random = Math.floor(Math.random() * 1000000);
 		var classRandom = 'fired' + random;

@@ -12,15 +12,39 @@ document.addEventListener("mousemove", function(event) {
 	mouseY = event.pageY;
 });
 
-setInterval(function() {
-	for (var i = 0; i < 5; i++) {
+
+setInterval(function(){
+setTimeout(function() {
+	for (var i = 0; i < 20; i++) {
 		enemy.move("top", 5);
 	}
 
+	setTimeout(function() {
+		for (var i = 0; i < 20; i++) {
+			enemy.move("top", -5);
+		}
+
+	}, 1200)
+
 }, 1200)
 
+}, 2400)
+
+var condition = false;
 
 
+function codeThatMightChangeFlag(callback) {
+    // do a bunch of stuff
+    if (condition) {
+        // call the callback to notify other code
+        callback();
+    }
+}
+
+function myCool() {
+	console.log("IT works!");
+}
+codeThatMightChangeFlag();
 
 
 function Hero(domNode, startingPosition, speed, controlling) {
@@ -42,6 +66,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	setup();
 
 	function setup() {
+
 		hero.domNode = document.getElementsByClassName(domNode)[0];
 		hero.domNode.style.left = startingPosition[0] + "px";
 		hero.domNode.style.top = startingPosition[1] + "px";
@@ -140,14 +165,37 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	}
 
 	function move(direction, value, movementAction) {
+		condition = true;
 			var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
 			directionValue += value;
-			hero.left
 			hero.domNode.style[direction] = directionValue + "px";
 
-			hero.hitBox.forEach(function(element) {
-				element[direction] += value;
-			})
+
+
+			if (value > 0) {
+				for (var i = 0; i < value; i++) {
+					setTimeout(function() {
+						// console.log("HEllo")
+						hero.hitBox.forEach(function(element, index) {
+							element[direction] += 1;
+							// console.log(element[direction])
+							// showHits(element.left, element.top);
+						})
+					}, (i * 200))
+				}
+			} else {
+				for (var i = 0; i > value; i--) {
+					setTimeout(function() {
+						// console.log("HEllo")
+						hero.hitBox.forEach(function(element, index) {
+							element[direction] -= 1;
+							// console.log(element[direction])
+							// showHits(element.left, element.top);
+						})
+					}, (i * 10))
+				}
+			}
+
 	}
 
 
@@ -240,6 +288,10 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		document.getElementsByTagName('head')[0].appendChild(bulletStyles);
 
 		hero.domNode.prepend(bullet);
+
+		setTimeout(function() {
+			bullet.remove();
+		}, 3000)
 	}
 
 	// function buildSquareHitBox(hitBox, width, topX, topY) {

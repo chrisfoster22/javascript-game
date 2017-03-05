@@ -12,6 +12,15 @@ document.addEventListener("mousemove", function(event) {
 	mouseY = event.pageY;
 });
 
+setInterval(function() {
+	for (var i = 0; i < 5; i++) {
+		enemy.move("top", 5);
+	}
+
+}, 1200)
+
+
+
 
 
 function Hero(domNode, startingPosition, speed, controlling) {
@@ -20,6 +29,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	hero.speed = speed;
 
 	hero.target;
+	hero.move = move;
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
 	hero.movement = {
@@ -39,7 +49,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		hero.left;
 
 		if (controlling) {
-			addListeners()
+			addListeners();
 		}
 
 	}
@@ -52,7 +62,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		for (var i = 0; i < width; i++) {
 		    xValue = (centerX + radius * Math.cos(2 * Math.PI * i / width));
 		    yValue = (centerY + radius * Math.sin(2 * Math.PI * i / width));
-			hitBox.push([Math.round(xValue), Math.round(yValue)]);
+			hitBox.push({left: Math.round(xValue), top: Math.round(yValue)});
 		}
 		return hitBox;
 	}
@@ -134,6 +144,10 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			directionValue += value;
 			hero.left
 			hero.domNode.style[direction] = directionValue + "px";
+
+			hero.hitBox.forEach(function(element) {
+				element[direction] += value;
+			})
 	}
 
 
@@ -207,7 +221,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 		target.hitBox.forEach(function(element) {
 			// console.log(element, left, top)
-			if (Math.abs(element[0] - left) <= 1 && Math.abs(element[1] - top) <= 1) {
+			if (Math.abs(element["left"] - left) <= 2 && Math.abs(element["top"] - top) <= 2) {
 				console.log("HIT!!!");
 				showHits(left, top);
 			}

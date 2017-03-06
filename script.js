@@ -1,5 +1,5 @@
 
-var hero = new Hero("hero", [0, 0], 3, true);
+var hero = new Hero("hero", [0, 0], 5, true);
 var enemy = new Hero("enemy", [400, 300], 5);
 
 hero.target = enemy;
@@ -13,39 +13,22 @@ document.addEventListener("mousemove", function(event) {
 });
 
 
-setInterval(function(){
-setTimeout(function() {
-	for (var i = 0; i < 20; i++) {
-		enemy.move("top", 5);
-	}
+setTimeout(function(){
+	setInterval(function() {
 
-	setTimeout(function() {
-		for (var i = 0; i < 20; i++) {
-			enemy.move("top", -5);
-		}
+		setTimeout(function() {
+			enemy.movement.movingDown = false;
+			enemy.movement.movingUp = true;
+		}, 2000)
 
-	}, 1200)
+		setTimeout(function() {
+			enemy.movement.movingUp = false;
+			enemy.movement.movingDown = true;
+		})
 
-}, 1200)
+	}, 4000)
 
 }, 2400)
-
-var condition = false;
-
-
-function codeThatMightChangeFlag(callback) {
-    // do a bunch of stuff
-    if (condition) {
-        // call the callback to notify other code
-        callback();
-    }
-}
-
-function myCool() {
-	console.log("IT works!");
-}
-codeThatMightChangeFlag();
-
 
 function Hero(domNode, startingPosition, speed, controlling) {
 
@@ -56,6 +39,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	hero.move = move;
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
+
 	hero.movement = {
 		movingUp: false,
 		movingDown: false,
@@ -92,6 +76,22 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		return hitBox;
 	}
 
+	var movementFrames = setInterval(function() {
+
+		if (hero.movement.movingLeft) {
+			move("left", -(hero.speed), "movingLeft");
+		}
+		if (hero.movement.movingRight) {
+			move("left", hero.speed, "movingRight")
+		}
+		if (hero.movement.movingUp) {
+			move("top", -(hero.speed), "movingUp");
+		}
+		if (hero.movement.movingDown) {
+			move("top", hero.speed, "movingDown")
+		}
+	}, 40)
+
 	function addListeners() {
 
 		document.addEventListener("keydown", function(event) {
@@ -108,19 +108,19 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			switch(event.keyCode) {
 				case 37:
 					hero.movement.movingLeft = false;
-					clearInterval(currentlyMovingLeft);
+					// clearInterval(currentlyMovingLeft);
 					break;
 				case 38:
 					hero.movement.movingUp = false;
-					clearInterval(currentlyMovingUp);
+					// clearInterval(currentlyMovingUp);
 					break;
 				case 39:
 					hero.movement.movingRight = false;
-					clearInterval(currentlyMovingRight);
+					// clearInterval(currentlyMovingRight);
 					break;
 				case 40:
 					hero.movement.movingDown = false;
-					clearInterval(currentlyMovingDown);
+					// clearInterval(currentlyMovingDown);
 					break;
 			}
 		});
@@ -133,7 +133,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 				if (hero.movement.movingLeft === false) {
 					hero.movement.movingLeft = true;
 					currentlyMovingLeft = setInterval(function() {
-						move("left", -(hero.speed), "movingLeft")
+						// move("left", -(hero.speed), "movingLeft")
 					}, 10)
 				}
 				break;
@@ -141,7 +141,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 				if (hero.movement.movingUp === false) {
 					hero.movement.movingUp = true;
 					currentlyMovingUp = setInterval(function() {
-						move("top", -(hero.speed), "movingUp")
+						// move("top", -(hero.speed), "movingUp")
 					}, 10)
 				}
 				break;
@@ -149,7 +149,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 				if (hero.movement.movingRight === false) {
 					hero.movement.movingRight = true;
 					currentlyMovingRight = setInterval(function() {
-						move("left", hero.speed, "movingRight")
+						// move("left", hero.speed, "movingRight")
 					}, 10)
 				}
 				break;
@@ -157,7 +157,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 				if (hero.movement.movingDown === false) {
 					hero.movement.movingDown = true;
 					currentlyMovingDown = setInterval(function() {
-						move("top", hero.speed, "movingDown")
+						// move("top", hero.speed, "movingDown")
 					}, 10)
 				}
 				break;
@@ -165,36 +165,33 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	}
 
 	function move(direction, value, movementAction) {
-		condition = true;
 			var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
 			directionValue += value;
 			hero.domNode.style[direction] = directionValue + "px";
 
-
-
-			if (value > 0) {
-				for (var i = 0; i < value; i++) {
-					setTimeout(function() {
-						// console.log("HEllo")
+			// if (value > 0) {
+				// for (var i = 0; i < value; i++) {
+					// setTimeout(function() {
+						// console.log("Down")
 						hero.hitBox.forEach(function(element, index) {
-							element[direction] += 1;
+							element[direction] += value;
 							// console.log(element[direction])
 							// showHits(element.left, element.top);
 						})
-					}, (i * 200))
-				}
-			} else {
-				for (var i = 0; i > value; i--) {
-					setTimeout(function() {
-						// console.log("HEllo")
-						hero.hitBox.forEach(function(element, index) {
-							element[direction] -= 1;
-							// console.log(element[direction])
+					// }, (i * 200))
+				// }
+			// } else {
+				// for (var i = 0; i > value; i--) {
+					// setTimeout(function() {
+					// 	// console.log("Up")
+						// hero.hitBox.forEach(function(element, index) {
+							// element[direction] -= 1;
+					// 		// console.log(element[direction])
 							// showHits(element.left, element.top);
-						})
-					}, (i * 10))
-				}
-			}
+						// })
+					// }, (i * 200))
+				// }
+			// }
 
 	}
 

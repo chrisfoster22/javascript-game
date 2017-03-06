@@ -17,6 +17,11 @@ body {
 	height: 50px;
 	border-radius: 50%;
 	z-index: -1;
+	-webkit-transition: all .04s linear;
+   -moz-transition: all .04s linear;
+	-ms-transition: all .04s linear;
+	 -o-transition: all .04s linear;
+		transition: all .04s linear;
 }
 
 .enemy {
@@ -28,11 +33,11 @@ body {
 	top: 300px;
 	border-radius: 50%;
 	z-index: -1;
-	-webkit-transition: all 1s linear;
-   -moz-transition: all 1s linear;
-	-ms-transition: all 1s linear;
-	 -o-transition: all 1s linear;
-		transition: all 1s linear;
+	-webkit-transition: all .04s linear;
+   -moz-transition: all .04s linear;
+	-ms-transition: all .04s linear;
+	 -o-transition: all .04s linear;
+		transition: all .04s linear;
 }
 
 .bullet {

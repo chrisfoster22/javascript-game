@@ -1,35 +1,4 @@
 
-var hero = new Hero("hero", [0, 0], 5, true);
-var enemy = new Hero("enemy", [400, 300], 5);
-
-hero.target = enemy;
-
-var mouseX = 1, mouseY = 1;
-
-
-document.addEventListener("mousemove", function(event) {
-	mouseX = event.pageX;
-	mouseY = event.pageY;
-});
-
-
-setTimeout(function(){
-	setInterval(function() {
-
-		setTimeout(function() {
-			enemy.movement.movingDown = false;
-			enemy.movement.movingUp = true;
-		}, 2000)
-
-		setTimeout(function() {
-			enemy.movement.movingUp = false;
-			enemy.movement.movingDown = true;
-		})
-
-	}, 4000)
-
-}, 2400)
-
 function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
@@ -104,95 +73,19 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			}
 		});
 
-		document.addEventListener("keyup", function(event) {
-			switch(event.keyCode) {
-				case 37:
-					hero.movement.movingLeft = false;
-					// clearInterval(currentlyMovingLeft);
-					break;
-				case 38:
-					hero.movement.movingUp = false;
-					// clearInterval(currentlyMovingUp);
-					break;
-				case 39:
-					hero.movement.movingRight = false;
-					// clearInterval(currentlyMovingRight);
-					break;
-				case 40:
-					hero.movement.movingDown = false;
-					// clearInterval(currentlyMovingDown);
-					break;
-			}
-		});
-	}
+		document.addEventListener("keyup", cancelMovement);
 
-	function determineMovement(key) {
-
-		switch(key) {
-			case 37:
-				if (hero.movement.movingLeft === false) {
-					hero.movement.movingLeft = true;
-					currentlyMovingLeft = setInterval(function() {
-						// move("left", -(hero.speed), "movingLeft")
-					}, 10)
-				}
-				break;
-			case 38:
-				if (hero.movement.movingUp === false) {
-					hero.movement.movingUp = true;
-					currentlyMovingUp = setInterval(function() {
-						// move("top", -(hero.speed), "movingUp")
-					}, 10)
-				}
-				break;
-			case 39:
-				if (hero.movement.movingRight === false) {
-					hero.movement.movingRight = true;
-					currentlyMovingRight = setInterval(function() {
-						// move("left", hero.speed, "movingRight")
-					}, 10)
-				}
-				break;
-			case 40:
-				if (hero.movement.movingDown === false) {
-					hero.movement.movingDown = true;
-					currentlyMovingDown = setInterval(function() {
-						// move("top", hero.speed, "movingDown")
-					}, 10)
-				}
-				break;
-		}
 	}
 
 	function move(direction, value, movementAction) {
-			var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
-			directionValue += value;
-			hero.domNode.style[direction] = directionValue + "px";
+		var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
+		directionValue += value;
+		hero.domNode.style[direction] = directionValue + "px";
 
-			// if (value > 0) {
-				// for (var i = 0; i < value; i++) {
-					// setTimeout(function() {
-						// console.log("Down")
-						hero.hitBox.forEach(function(element, index) {
-							element[direction] += value;
-							// console.log(element[direction])
-							// showHits(element.left, element.top);
-						})
-					// }, (i * 200))
-				// }
-			// } else {
-				// for (var i = 0; i > value; i--) {
-					// setTimeout(function() {
-					// 	// console.log("Up")
-						// hero.hitBox.forEach(function(element, index) {
-							// element[direction] -= 1;
-					// 		// console.log(element[direction])
-							// showHits(element.left, element.top);
-						// })
-					// }, (i * 200))
-				// }
-			// }
+		hero.hitBox.forEach(function(element, index) {
+			element[direction] += value;
 
+		});
 	}
 
 
@@ -225,9 +118,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		var classRandom = 'fired' + random;
 		var bulletRandom = 'bullet' + random;
 
-		// left/top vs transform
-
-		// bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (bulletDestX)  + 'px; top: ' + (bulletDestY) + 'px; }';
+		// Animate the bullet using transform. Old way using left/top values is in pit.js.
 		bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (bulletDestX - left)  + 'px, ' + (bulletDestY - top) + 'px); }';
 
 		document.getElementsByTagName('head')[0].appendChild(bulletStyles);
@@ -291,14 +182,47 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		}, 3000)
 	}
 
-	// function buildSquareHitBox(hitBox, width, topX, topY) {
-	//
-	// 	for (var i = 0; i < width; i++) {
-	// 		for (var j = 0; j < width; j++) {
-	// 			hitBox.push([topX + i, topY + j]);
-	// 		}
-	// 	}
-	//
-	// }
+	function cancelMovement(event) {
+		switch(event.keyCode) {
+			case 37:
+				hero.movement.movingLeft = false;
+				break;
+			case 38:
+				hero.movement.movingUp = false;
+				break;
+			case 39:
+				hero.movement.movingRight = false;
+				break;
+			case 40:
+				hero.movement.movingDown = false;
+				break;
+		}
+	}
+
+	function determineMovement(key) {
+
+		switch(key) {
+			case 37:
+				if (hero.movement.movingLeft === false) {
+					hero.movement.movingLeft = true;
+				}
+				break;
+			case 38:
+				if (hero.movement.movingUp === false) {
+					hero.movement.movingUp = true;
+				}
+				break;
+			case 39:
+				if (hero.movement.movingRight === false) {
+					hero.movement.movingRight = true;
+				}
+				break;
+			case 40:
+				if (hero.movement.movingDown === false) {
+					hero.movement.movingDown = true;
+				}
+				break;
+		}
+	}
 
 }

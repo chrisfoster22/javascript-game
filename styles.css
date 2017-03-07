@@ -47,11 +47,11 @@ body {
 	/*top: 0;*/
 	height: 5px;
 	background-color: red;
-	-webkit-transition: all 1s linear;
-   -moz-transition: all 1s linear;
-	-ms-transition: all 1s linear;
-	 -o-transition: all 1s linear;
-		transition: all 1s linear;
+	-webkit-transition: all .7s linear;
+   -moz-transition: all .7s linear;
+	-ms-transition: all .7s linear;
+	 -o-transition: all .7s linear;
+		transition: all .7s linear;
 }
 
 /*.fired {*/

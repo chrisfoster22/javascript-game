@@ -250,25 +250,25 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			var bulletLeft = (((bulletDestX - left) / 200) * currentFrame) + left;
 			var bulletTop = (((bulletDestY - top) / 200) * currentFrame) + top;
 			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", bulletLeft, bulletTop, "] I am going to [", bulletDestX, bulletDestY, "]");
-			didItHit(hero.target, bulletLeft, bulletTop);
+			didItHit(hero.target, bulletLeft, bulletTop, removeBullet);
 		}, 1);
 
-		setTimeout(function() {
+		function removeBullet() {
 			bullet.remove();
 			bulletStyles.remove();
 			clearInterval(didHit);
+		}
 
-		}, 1000)
+		setTimeout(removeBullet, 1000)
 
 	}
 
-	function didItHit(target, left, top) {
+	function didItHit(target, left, top, callback) {
 
 		target.hitBox.forEach(function(element) {
-			// console.log(element, left, top)
 			if (Math.abs(element["left"] - left) <= 2 && Math.abs(element["top"] - top) <= 2) {
-				console.log("HIT!!!");
 				showHits(left, top);
+				callback();
 			}
 		})
 	}

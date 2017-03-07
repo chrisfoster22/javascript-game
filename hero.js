@@ -19,51 +19,6 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	setup();
 
-	function setup() {
-
-		hero.domNode = document.getElementsByClassName(domNode)[0];
-		hero.domNode.style.left = startingPosition[0] + "px";
-		hero.domNode.style.top = startingPosition[1] + "px";
-
-		hero.left;
-
-		if (controlling) {
-			addListeners();
-		}
-
-		movementFrames = setInterval(function() {
-
-			if (hero.movement.movingLeft) {
-				move("left", -(hero.speed), "movingLeft");
-			}
-			if (hero.movement.movingRight) {
-				move("left", hero.speed, "movingRight")
-			}
-			if (hero.movement.movingUp) {
-				move("top", -(hero.speed), "movingUp");
-			}
-			if (hero.movement.movingDown) {
-				move("top", hero.speed, "movingDown")
-			}
-		}, 40)
-
-	}
-
-	function addListeners() {
-
-		document.addEventListener("keydown", function(event) {
-			var key = event.keyCode;
-			if (key < 41) {
-				determineMovement(key);
-			}
-			else {
-				attack();
-			}
-		});
-
-		document.addEventListener("keyup", cancelMovement);
-
-	}
 
 	function move(direction, value, movementAction) {
 		var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
@@ -75,8 +30,6 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 		});
 	}
-
-
 
 	function attack() {
 
@@ -152,6 +105,8 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		})
 	}
 
+
+
 	function showHits(left, top) {
 
 		var bullet = document.createElement("div");
@@ -168,6 +123,54 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		setTimeout(function() {
 			bullet.remove();
 		}, 3000)
+	}
+
+
+
+	function setup() {
+
+		hero.domNode = document.getElementsByClassName(domNode)[0];
+		hero.domNode.style.left = startingPosition[0] + "px";
+		hero.domNode.style.top = startingPosition[1] + "px";
+
+		hero.left;
+
+		if (controlling) {
+			addListeners();
+		}
+
+		movementFrames = setInterval(function() {
+
+			if (hero.movement.movingLeft) {
+				move("left", -(hero.speed), "movingLeft");
+			}
+			if (hero.movement.movingRight) {
+				move("left", hero.speed, "movingRight")
+			}
+			if (hero.movement.movingUp) {
+				move("top", -(hero.speed), "movingUp");
+			}
+			if (hero.movement.movingDown) {
+				move("top", hero.speed, "movingDown")
+			}
+		}, 40)
+
+	}
+
+	function addListeners() {
+
+		document.addEventListener("keydown", function(event) {
+			var key = event.keyCode;
+			if (key < 41) {
+				determineMovement(key);
+			}
+			else {
+				attack();
+			}
+		});
+
+		document.addEventListener("keyup", cancelMovement);
+
 	}
 
 	function buildCircularHitBox(width, centerX, centerY) {

@@ -2,10 +2,11 @@
 function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
-	hero.speed = speed;
 
+	hero.speed = speed;
 	hero.target;
-	hero.move = move;
+
+	var movementFrames;
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
 
@@ -30,36 +31,23 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			addListeners();
 		}
 
+		movementFrames = setInterval(function() {
+
+			if (hero.movement.movingLeft) {
+				move("left", -(hero.speed), "movingLeft");
+			}
+			if (hero.movement.movingRight) {
+				move("left", hero.speed, "movingRight")
+			}
+			if (hero.movement.movingUp) {
+				move("top", -(hero.speed), "movingUp");
+			}
+			if (hero.movement.movingDown) {
+				move("top", hero.speed, "movingDown")
+			}
+		}, 40)
+
 	}
-
-	function buildCircularHitBox(width, centerX, centerY) {
-
-		var hitBox = [];
-		var radius = width / 2;
-
-		for (var i = 0; i < width; i++) {
-		    xValue = (centerX + radius * Math.cos(2 * Math.PI * i / width));
-		    yValue = (centerY + radius * Math.sin(2 * Math.PI * i / width));
-			hitBox.push({left: Math.round(xValue), top: Math.round(yValue)});
-		}
-		return hitBox;
-	}
-
-	var movementFrames = setInterval(function() {
-
-		if (hero.movement.movingLeft) {
-			move("left", -(hero.speed), "movingLeft");
-		}
-		if (hero.movement.movingRight) {
-			move("left", hero.speed, "movingRight")
-		}
-		if (hero.movement.movingUp) {
-			move("top", -(hero.speed), "movingUp");
-		}
-		if (hero.movement.movingDown) {
-			move("top", hero.speed, "movingDown")
-		}
-	}, 40)
 
 	function addListeners() {
 
@@ -180,6 +168,19 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		setTimeout(function() {
 			bullet.remove();
 		}, 3000)
+	}
+
+	function buildCircularHitBox(width, centerX, centerY) {
+
+		var hitBox = [];
+		var radius = width / 2;
+
+		for (var i = 0; i < width; i++) {
+			xValue = (centerX + radius * Math.cos(2 * Math.PI * i / width));
+			yValue = (centerY + radius * Math.sin(2 * Math.PI * i / width));
+			hitBox.push({left: Math.round(xValue), top: Math.round(yValue)});
+		}
+		return hitBox;
 	}
 
 	function cancelMovement(event) {

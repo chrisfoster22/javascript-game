@@ -3,6 +3,8 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
 
+	var ability = new Ability('fireball', 20, 1000);
+
 	hero.speed = speed;
 	hero.target;
 
@@ -31,10 +33,10 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		});
 	}
 
-	function attack() {
+	function attack(ability) {
 
-		var bulletStyles = document.createElement('style');
-		bulletStyles.type = 'text/css';
+		var abilityStyles = document.createElement('style');
+		abilityStyles.type = 'text/css';
 		var left = parseInt(hero.domNode.style["left"].split("px")[0]);
 		var top = parseInt(hero.domNode.style["top"].split("px")[0]);
 
@@ -52,46 +54,46 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		// angle in radians
 		var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 
-		var bulletDestX = p1.x + Math.cos(angleRadians) * 1000;
-		var bulletDestY = p1.y + Math.sin(angleRadians) * 1000;
+		var abilityDestX = p1.x + Math.cos(angleRadians) * ability.range;
+		var abilityDestY = p1.y + Math.sin(angleRadians) * ability.range;
 
 		var random = Math.floor(Math.random() * 1000000);
 		var classRandom = 'fired' + random;
-		var bulletRandom = 'bullet' + random;
+		var abilityRandom = ability.name + random;
 
-		// Animate the bullet using transform. Old way using left/top values is in pit.js.
-		bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (bulletDestX - left)  + 'px, ' + (bulletDestY - top) + 'px); }';
+		// Animate the ability using transform. Old way using left/top values is in pit.js.
+		abilityStyles.innerHTML = '.' + abilityRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (abilityDestX - left)  + 'px, ' + (abilityDestY - top) + 'px); }';
 
-		document.getElementsByTagName('head')[0].appendChild(bulletStyles);
+		document.getElementsByTagName('head')[0].appendChild(abilityStyles);
 
-		var bullet = document.createElement("div");
-		bullet.classList.add("bullet", bulletRandom);
+		var abilityDiv = document.createElement("div");
+		abilityDiv.classList.add(ability.name, abilityRandom);
 
-		hero.domNode.prepend(bullet);
+		hero.domNode.prepend(abilityDiv);
 
 		setTimeout(function() {
-			bullet.classList.add(classRandom);
+			abilityDiv.classList.add(classRandom);
 		}, 20);
 
 		var currentFrame = 0;
 
 		var didHit = setInterval(function() {
-			if (currentFrame < 200) {
+			if (currentFrame < 500) {
 				currentFrame += 1;
 			}
-			var bulletLeft = (((bulletDestX - left) / 200) * currentFrame) + left;
-			var bulletTop = (((bulletDestY - top) / 200) * currentFrame) + top;
-			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", bulletLeft, bulletTop, "] I am going to [", bulletDestX, bulletDestY, "]");
-			didItHit(hero.target, bulletLeft, bulletTop, removeBullet);
+			var abilityLeft = (((abilityDestX - left) / 200) * currentFrame) + left;
+			var abilityTop = (((abilityDestY - top) / 200) * currentFrame) + top;
+			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", abilityLeft, abilityTop, "] I am going to [", abilityDestX, abilityDestY, "]");
+			didItHit(hero.target, abilityLeft, abilityTop, removeAbility);
 		}, 1);
 
-		function removeBullet() {
-			bullet.remove();
-			bulletStyles.remove();
+		function removeAbility() {
+			abilityDiv.remove();
+			abilityStyles.remove();
 			clearInterval(didHit);
 		}
 
-		setTimeout(removeBullet, 1000)
+		setTimeout(removeAbility, 1000)
 
 	}
 
@@ -109,19 +111,19 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	function showHits(left, top) {
 
-		var bullet = document.createElement("div");
+		var abilityDiv = document.createElement("div");
 		var random = Math.floor(Math.random() * 1000000);
-		var bulletRandom = 'bullet' + random;
-		var bulletStyles = document.createElement('style');
-		bulletStyles.type = 'text/css';
-		bullet.classList.add("bullet", bulletRandom);
-		bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
-		document.getElementsByTagName('head')[0].appendChild(bulletStyles);
+		var abilityRandom = ability.name + random;
+		var abilityStyles = document.createElement('style');
+		abilityStyles.type = 'text/css';
+		abilityDiv.classList.add(ability.name, abilityRandom);
+		abilityStyles.innerHTML = '.' + abilityRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
+		document.getElementsByTagName('head')[0].appendChild(abilityStyles);
 
-		hero.domNode.prepend(bullet);
+		hero.domNode.prepend(abilityDiv);
 
 		setTimeout(function() {
-			bullet.remove();
+			abilityDiv.remove();
 		}, 3000)
 	}
 
@@ -165,7 +167,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 				determineMovement(key);
 			}
 			else {
-				attack();
+				attack(ability);
 			}
 		});
 

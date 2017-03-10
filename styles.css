@@ -52,7 +52,7 @@ body {
    -moz-transition: all .7s linear;
 	-ms-transition: all .7s linear;
 	 -o-transition: all .7s linear;*/
-		transition: all .7s linear;
+		/*transition: all 4s linear;*/
 }
 
 /*.fired {*/

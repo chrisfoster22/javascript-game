@@ -3,7 +3,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
 
-	var ability = new Ability('fireball', 20, 1000);
+	var ability = new Ability('fireball', 20, 1000, 100);
 
 	hero.speed = speed;
 	hero.target;
@@ -69,6 +69,10 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		var abilityDiv = document.createElement("div");
 		abilityDiv.classList.add(ability.name, abilityRandom);
 
+		abilityDiv.style.transition = "all " + (ability.speed * .004) + "s linear";
+
+		console.log(abilityDiv.style)
+
 		hero.domNode.prepend(abilityDiv);
 
 		setTimeout(function() {
@@ -78,11 +82,11 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		var currentFrame = 0;
 
 		var didHit = setInterval(function() {
-			if (currentFrame < 500) {
+			if (currentFrame < ability.speed * 4) {
 				currentFrame += 1;
 			}
-			var abilityLeft = (((abilityDestX - left) / 200) * currentFrame) + left;
-			var abilityTop = (((abilityDestY - top) / 200) * currentFrame) + top;
+			var abilityLeft = (((abilityDestX - left) / ability.speed) * currentFrame) + left;
+			var abilityTop = (((abilityDestY - top) / ability.speed) * currentFrame) + top;
 			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", abilityLeft, abilityTop, "] I am going to [", abilityDestX, abilityDestY, "]");
 			didItHit(hero.target, abilityLeft, abilityTop, removeAbility);
 		}, 1);
@@ -93,7 +97,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			clearInterval(didHit);
 		}
 
-		setTimeout(removeAbility, 1000)
+		setTimeout(removeAbility, ability.speed * 4)
 
 	}
 

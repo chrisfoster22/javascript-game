@@ -6,6 +6,8 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	hero.speed = speed;
 	hero.target;
 
+	hero.hitPoints = 500;
+
 	var movementFrames,
 	abilityMap;
 
@@ -99,17 +101,23 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 			didItHit(ability, hero.target, abilityLeft, abilityTop, removeAbility);
 		}, 1);
 
-		function removeAbility() {
+		setTimeout(removeAbility, ability.speed * 4);
+		setCooldown(ability);
+
+		function removeAbility(target, ability, left, top) {
+			clearInterval(didHit);
 			abilityDiv.remove();
 			abilityStyles.remove();
-			clearInterval(didHit);
+			damage(target, ability.damage, left, top);
+			showHits(ability, left, top, abilityHitBox, target.hitBox);
 		}
-		cooldownMap[ability.key] = true;
-		setTimeout(function() {
-			cooldownMap[ability.key] = false;
-		}, ability.cooldown * 1000)
 
-		setTimeout(removeAbility, ability.speed * 4)
+		function setCooldown(ability) {
+			cooldownMap[ability.key] = true;
+			setTimeout(function() {
+				cooldownMap[ability.key] = false;
+			}, ability.cooldown * 1000);
+		}
 
 	}
 
@@ -118,11 +126,30 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		abilityHitBox.forEach(function(abilityBox) {
 			target.hitBox.forEach(function(targetBox) {
 				if (Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
-					showHits(ability, left, top, abilityHitBox, target.hitBox);
-					callback();
+					callback(target, ability, left, top);
 				}
 			})
 		})
+	}
+
+	function damage(target, damage, left, top) {
+		target.hitPoints -= damage;
+
+		var damageDiv = document.createElement("div");
+		damageDiv.classList.add("damage");
+		damageDiv.style.left = target.domNode.style["left"];
+		damageDiv.style.top = target.domNode.style["top"];
+		damageDiv.innerHTML = damage + "!";
+		document.body.append(damageDiv);
+		setTimeout(function() {
+			damageDiv.style.top = parseInt(target.domNode.style["top"].split("px")[0]) - 40 + "px";
+		}, 50);
+		setTimeout(function() {
+			damageDiv.remove()
+		}, 1200)
+		if (target.hitPoints <= 0) {
+			alert("You win!");
+		}
 	}
 
 	function showHits(ability, left, top) {

@@ -44,12 +44,22 @@ body {
 	position: absolute;
 	height: 20px;
 	border-radius: 50%;
-	background-color: red;
+	background-color: darkred;
 
 }
 
 .hit {
 	width: 1px;
 	height: 1px;
-	background-color: red;
+	background-color: darkred;
+}
+
+.damage {
+	font-weight: bold;
+	position: relative;
+	top: -25px;
+	left: -25px;
+	color: red;
+	transition: all 1s linear;
+	font-family: "Comic Sans MS";
 }

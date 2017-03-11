@@ -6,8 +6,10 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	hero.speed = speed;
 	hero.target;
 
-	var movementFrames;
-	var abilityMap;
+	var movementFrames,
+	abilityMap;
+
+	var cooldownMap = {};
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
 
@@ -25,8 +27,8 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		var abilityMap = {};
 		abilities.forEach(function(ability) {
 			abilityMap[ability.key] = ability;
+			cooldownMap[ability.key] = false;
 		});
-		console.log(abilityMap);
 		return abilityMap;
 	}
 
@@ -102,6 +104,10 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 			abilityStyles.remove();
 			clearInterval(didHit);
 		}
+		cooldownMap[ability.key] = true;
+		setTimeout(function() {
+			cooldownMap[ability.key] = false;
+		}, ability.cooldown * 1000)
 
 		setTimeout(removeAbility, ability.speed * 4)
 
@@ -179,7 +185,9 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 			}
 			else if (key > 48 < 54){
 				var ability = abilityMap[key];
-				attack(ability);
+				if (cooldownMap[key] === false) {
+					attack(ability);
+				}
 			}
 		});
 

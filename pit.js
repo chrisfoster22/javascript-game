@@ -8,8 +8,6 @@ function buildSquareHitBox(hitBox, width, topX, topY) {
 
 }
 
-
-
 // left/top vs transform
 bulletStyles.innerHTML = '.' + bulletRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { left: ' + (bulletDestX)  + 'px; top: ' + (bulletDestY) + 'px; }';
 
@@ -44,3 +42,45 @@ function move(direction, value, movementAction) {
 		// }
 
 }
+
+
+function showHitBoxes(abilityHitbox, targetHitbox) {
+	abilityHitbox.forEach(function(point) {
+		// console.log(point);
+		var hitRandom = "hit" + Math.floor(Math.random() * 1000000);
+		var hitBoxStyles = document.createElement('style');
+		hitBoxStyles.type = 'text/css';
+		hitBoxStyles.innerHTML = '.' + hitRandom + ' { position: fixed; left: ' + point["left"] + 'px; top: ' + (point["top"]) + 'px; }';
+		document.getElementsByTagName('head')[0].appendChild(hitBoxStyles);
+		var hitDiv = document.createElement("div");
+		hitDiv.classList.add("hit", hitRandom)
+		hero.domNode.prepend(hitDiv);
+	});
+
+	targetHitbox.forEach(function(point) {
+		// console.log(point);
+		var hitRandom = "hit" + Math.floor(Math.random() * 1000000);
+		var hitBoxStyles = document.createElement('style');
+		hitBoxStyles.type = 'text/css';
+		hitBoxStyles.innerHTML = '.' + hitRandom + ' { background-color: blue; position: fixed; left: ' + point["left"] + 'px; top: ' + (point["top"]) + 'px; }';
+		document.getElementsByTagName('head')[0].appendChild(hitBoxStyles);
+		var hitDiv = document.createElement("div");
+		hitDiv.classList.add("hit", hitRandom)
+		hero.domNode.prepend(hitDiv);
+
+		setTimeout(function() {
+			abilityDiv.remove();
+		}, 3000)
+	});
+}
+
+
+// function didItHit(target, left, top, callback) {
+//
+// 	target.hitBox.forEach(function(element) {
+// 		if (Math.abs(element["left"] - left) <= 2 && Math.abs(element["top"] - top) <= 2) {
+// 			showHits(left, top);
+// 			callback();
+// 		}
+// 	})
+// }

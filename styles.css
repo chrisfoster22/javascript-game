@@ -42,26 +42,14 @@ body {
 
 .fireball {
 	position: absolute;
-	width: 20px;
-	/*left: 0;*/
-	/*top: 0;*/
 	height: 20px;
 	border-radius: 50%;
 	background-color: red;
-	/*-webkit-transition: all .7s linear;
-   -moz-transition: all .7s linear;
-	-ms-transition: all .7s linear;
-	 -o-transition: all .7s linear;*/
-		/*transition: all 4s linear;*/
+
 }
 
-/*.fired {*/
-	/*transition: all 1s;*/
-	/*left: 200px;*/
-/*}*/
-
-
-/*@keyframes fire {
-    from {left: 0px}
-    to {left: 1000px}
-}*/
+.hit {
+	width: 1px;
+	height: 1px;
+	background-color: red;
+}

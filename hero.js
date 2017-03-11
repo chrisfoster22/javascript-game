@@ -3,7 +3,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	var hero = this;
 
-	var ability = new Ability('fireball', 20, 1000, 100);
+	var ability = new Ability('fireball', 50, 1000, 100);
 
 	hero.speed = speed;
 	hero.target;
@@ -62,7 +62,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		var abilityRandom = ability.name + random;
 
 		// Animate the ability using transform. Old way using left/top values is in pit.js.
-		abilityStyles.innerHTML = '.' + abilityRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (abilityDestX - left)  + 'px, ' + (abilityDestY - top) + 'px); }';
+		abilityStyles.innerHTML = '.' + abilityRandom + ' { height: ' + ability.width + 'px; width: ' + ability.width + 'px; position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; } ' + '.' + classRandom + ' { transform: translate(' + (abilityDestX - left)  + 'px, ' + (abilityDestY - top) + 'px); }';
 
 		document.getElementsByTagName('head')[0].appendChild(abilityStyles);
 
@@ -71,7 +71,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 		abilityDiv.style.transition = "all " + (ability.speed * .004) + "s linear";
 
-		console.log(abilityDiv.style)
+		// console.log(abilityDiv.style)
 
 		hero.domNode.prepend(abilityDiv);
 
@@ -102,16 +102,16 @@ function Hero(domNode, startingPosition, speed, controlling) {
 	}
 
 	function didItHit(target, left, top, callback) {
-
-		target.hitBox.forEach(function(element) {
-			if (Math.abs(element["left"] - left) <= 2 && Math.abs(element["top"] - top) <= 2) {
-				showHits(left, top);
-				callback();
-			}
+		var abilityHitBox = buildCircularHitBox(ability.width, left, top);
+		abilityHitBox.forEach(function(abilityBox) {
+			target.hitBox.forEach(function(targetBox) {
+				if (Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
+					showHits(left, top, abilityHitBox, target.hitBox);
+					callback();
+				}
+			})
 		})
 	}
-
-
 
 	function showHits(left, top) {
 
@@ -121,17 +121,16 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		var abilityStyles = document.createElement('style');
 		abilityStyles.type = 'text/css';
 		abilityDiv.classList.add(ability.name, abilityRandom);
-		abilityStyles.innerHTML = '.' + abilityRandom + ' { position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
+		abilityStyles.innerHTML = '.' + abilityRandom + ' { height: ' + ability.width + 'px; width: ' + ability.width + 'px; position: fixed; left: ' + (left) + 'px; top: ' + top + 'px; }';
 		document.getElementsByTagName('head')[0].appendChild(abilityStyles);
 
 		hero.domNode.prepend(abilityDiv);
 
 		setTimeout(function() {
-			abilityDiv.remove();
-		}, 3000)
+				abilityDiv.remove();
+			}, 3000)
+
 	}
-
-
 
 	function setup() {
 

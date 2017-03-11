@@ -1,14 +1,13 @@
 
-function Hero(domNode, startingPosition, speed, controlling) {
+function Hero(domNode, startingPosition, speed, controlling, abilites) {
 
 	var hero = this;
-
-	var ability = new Ability('fireball', 50, 1000, 100);
 
 	hero.speed = speed;
 	hero.target;
 
 	var movementFrames;
+	var abilityMap;
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
 
@@ -19,8 +18,17 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		movingRight: false
 	}
 
+
 	setup();
 
+	function buildAbilityMap(abilities) {
+		var abilityMap = {};
+		abilities.forEach(function(ability) {
+			abilityMap[ability.key] = ability;
+		});
+		console.log(abilityMap);
+		return abilityMap;
+	}
 
 	function move(direction, value, movementAction) {
 		var directionValue = parseInt(hero.domNode.style[direction].split("px")[0]);
@@ -71,8 +79,6 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 		abilityDiv.style.transition = "all " + (ability.speed * .004) + "s linear";
 
-		// console.log(abilityDiv.style)
-
 		hero.domNode.prepend(abilityDiv);
 
 		setTimeout(function() {
@@ -88,7 +94,7 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			var abilityLeft = (((abilityDestX - left) / ability.speed) * currentFrame) + left;
 			var abilityTop = (((abilityDestY - top) / ability.speed) * currentFrame) + top;
 			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", abilityLeft, abilityTop, "] I am going to [", abilityDestX, abilityDestY, "]");
-			didItHit(hero.target, abilityLeft, abilityTop, removeAbility);
+			didItHit(ability, hero.target, abilityLeft, abilityTop, removeAbility);
 		}, 1);
 
 		function removeAbility() {
@@ -101,19 +107,19 @@ function Hero(domNode, startingPosition, speed, controlling) {
 
 	}
 
-	function didItHit(target, left, top, callback) {
+	function didItHit(ability, target, left, top, callback) {
 		var abilityHitBox = buildCircularHitBox(ability.width, left, top);
 		abilityHitBox.forEach(function(abilityBox) {
 			target.hitBox.forEach(function(targetBox) {
 				if (Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
-					showHits(left, top, abilityHitBox, target.hitBox);
+					showHits(ability, left, top, abilityHitBox, target.hitBox);
 					callback();
 				}
 			})
 		})
 	}
 
-	function showHits(left, top) {
+	function showHits(ability, left, top) {
 
 		var abilityDiv = document.createElement("div");
 		var random = Math.floor(Math.random() * 1000000);
@@ -139,6 +145,8 @@ function Hero(domNode, startingPosition, speed, controlling) {
 		hero.domNode.style.top = startingPosition[1] + "px";
 
 		hero.left;
+
+		abilityMap = buildAbilityMap(abilities);
 
 		if (controlling) {
 			addListeners();
@@ -169,7 +177,8 @@ function Hero(domNode, startingPosition, speed, controlling) {
 			if (key < 41) {
 				determineMovement(key);
 			}
-			else {
+			else if (key > 48 < 54){
+				var ability = abilityMap[key];
 				attack(ability);
 			}
 		});

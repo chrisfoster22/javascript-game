@@ -1,3 +1,7 @@
+var fireball = new Ability('fireball', 20, 1000, 300, 0, 49);
+var megaFireball = new Ability('fireball', 50, 400, 500, 0, 50);
+var superMegaFireball = new Ability('fireball', 100, 1000, 200, 0, 51);
+var abilities = [fireball, megaFireball, superMegaFireball]
 
 var hero = new Hero("hero", [0, 0], 6, true);
 var enemy = new Hero("enemy", [400, 300], 6);

@@ -49,8 +49,9 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 
 		var abilityStyles = document.createElement('style');
 		abilityStyles.type = 'text/css';
-		var left = parseInt(hero.domNode.style["left"].split("px")[0]);
-		var top = parseInt(hero.domNode.style["top"].split("px")[0]);
+		var left = parseInt(hero.domNode.style["left"].split("px")[0]) + (ability.width/2);
+		var top = parseInt(hero.domNode.style["top"].split("px")[0]) + (ability.width/2);
+		console.log(left, top);
 
 
 		var p1 = {
@@ -81,7 +82,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		var abilityDiv = document.createElement("div");
 		abilityDiv.classList.add(ability.name, abilityRandom);
 
-		abilityDiv.style.transition = "all " + (ability.speed * .004) + "s linear";
+		abilityDiv.style.transition = "all " + (ability.speed * .0035) + "s linear";
 
 		hero.domNode.prepend(abilityDiv);
 
@@ -104,15 +105,14 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		setTimeout(removeAbility, ability.speed * 4);
 		setCooldown(ability);
 
-		function removeAbility(target, ability, left, top) {
+		function removeAbility() {
 			clearInterval(didHit);
 			abilityDiv.remove();
 			abilityStyles.remove();
-			damage(target, ability.damage, left, top);
-			showHits(ability, left, top, abilityHitBox, target.hitBox);
 		}
 
 		function setCooldown(ability) {
+			console.log(cooldownMap);
 			cooldownMap[ability.key] = true;
 			setTimeout(function() {
 				cooldownMap[ability.key] = false;
@@ -122,11 +122,15 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	}
 
 	function didItHit(ability, target, left, top, callback) {
+		var didHit = false;
 		var abilityHitBox = buildCircularHitBox(ability.width, left, top);
 		abilityHitBox.forEach(function(abilityBox) {
 			target.hitBox.forEach(function(targetBox) {
-				if (Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
-					callback(target, ability, left, top);
+				if (didHit !== true && Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
+					didHit = true;
+					damage(target, ability.damage, left, top);
+					// showHits(ability, left, top);
+					callback();
 				}
 			})
 		})
@@ -153,7 +157,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	}
 
 	function showHits(ability, left, top) {
-
+		console.log(ability);
 		var abilityDiv = document.createElement("div");
 		var random = Math.floor(Math.random() * 1000000);
 		var abilityRandom = ability.name + random;

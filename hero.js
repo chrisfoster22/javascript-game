@@ -132,7 +132,9 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 				if (didHit !== true && Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
 					didHit = true;
 					damage(target, ability.damage, left, top);
-					// showHits(ability, left, top);
+					if (ability.statusEffect) {
+						ability.statusEffect.effect(target, ability.statusEffect.value);
+					}
 					callback();
 				}
 			})

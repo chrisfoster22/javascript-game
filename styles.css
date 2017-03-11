@@ -48,6 +48,15 @@ body {
 
 }
 
+.ice {
+	position: absolute;
+	height: 20px;
+	border-radius: 50%;
+	background-color: lightblue;
+
+}
+
+
 .hit {
 	width: 1px;
 	height: 1px;

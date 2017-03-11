@@ -1,12 +1,12 @@
-function Ability(name, width, range, speed, cooldown, key) {
+function Ability(args) {
 
-	this.name = name;
-	this.width = width;
-	this.hitBox = buildCircularHitBox(width);
-	this.range = range;
-	this.speed = speed;
-	this.cooldown = cooldown;
-	this.key = key;
+	this.name = args.name;
+	this.width = args.width;
+	this.hitBox = buildCircularHitBox(this.width);
+	this.range = args.range;
+	this.speed = args.speed;
+	this.cooldown = args.cooldown;
+	this.key = args.key;
 
 	function buildCircularHitBox(width, centerX, centerY) {
 

@@ -1,6 +1,6 @@
-var fireball = new Ability('fireball', 20, 1000, 300, 0, 49);
-var megaFireball = new Ability('fireball', 50, 400, 500, 0, 50);
-var superMegaFireball = new Ability('fireball', 100, 1000, 200, 0, 51);
+var fireball = new Ability({name:'fireball', width: 20, range: 1000, speed: 300, cooldown: 0, key: 49});
+var megaFireball = new Ability({ name: 'fireball', width: 50, range: 400, speed: 500, cooldown: 0, key: 50});
+var superMegaFireball = new Ability({name: 'fireball', width: 100, range: 1000, speed: 200, cooldown: 0, key: 51});
 var abilities = [fireball, megaFireball, superMegaFireball]
 
 var hero = new Hero("hero", [0, 0], 6, true);

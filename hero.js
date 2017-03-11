@@ -107,8 +107,11 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 
 		function removeAbility() {
 			clearInterval(didHit);
-			abilityDiv.remove();
-			abilityStyles.remove();
+			setTimeout(function() {
+				abilityDiv.remove();
+				abilityStyles.remove();
+			}, 60)
+
 		}
 
 		function setCooldown(ability) {

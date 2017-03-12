@@ -7,6 +7,7 @@ function Ability(args) {
 	this.cooldown = args.cooldown;
 	this.key = args.key;
 	this.damage = args.damage;
+	this.powerMultiplier = 1;
 
 	this.hitBox = buildCircularHitBox(this.width);
 

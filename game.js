@@ -1,7 +1,7 @@
 var ice = new Ability({name:'ice', width: 20, range: 1000, speed: 300, cooldown: 1, key: 49, damage: 10, statusEffect: {name: "freeze", value: 0.75}});
-var megaFireball = new Ability({ name: 'poison', width: 50, range: 600, speed: 300, cooldown: 3, key: 50, damage: 25, statusEffect: {name: "poison", value: 5}});
-var superMegaFireball = new Ability({name: 'fireball', width: 100, range: 1000, speed: 400, cooldown: 5, key: 51, damage: 100});
-var abilities = [ice, megaFireball, superMegaFireball]
+var poison = new Ability({ name: 'poison', width: 50, range: 600, speed: 300, cooldown: 3, key: 50, damage: 25, statusEffect: {name: "poison", value: 5}});
+var fireball = new Ability({name: 'fireball', width: 30, range: 1000, speed: 600, cooldown: 3, key: 51, damage: 45});
+var abilities = [ice, poison, fireball]
 
 var hero = new Hero("hero", [0, 0], 6, true);
 var enemy = new Hero("enemy", [400, 300], 6);

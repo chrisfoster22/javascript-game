@@ -7,6 +7,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	hero.target;
 
 	hero.hitPoints = 500;
+	var preparingAttack = false;
 
 	var movementFrames,
 	abilityMap;
@@ -46,13 +47,14 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		});
 	}
 
-	function attack(ability) {
-
+	function attack(ability, multiplier) {
+		var initialWidth = ability.width;
+		ability.width = ability.width * multiplier;
+		
 		var abilityStyles = document.createElement('style');
 		abilityStyles.type = 'text/css';
 		var left = parseInt(hero.domNode.style["left"].split("px")[0]) + (ability.width/2);
 		var top = parseInt(hero.domNode.style["top"].split("px")[0]) + (ability.width/2);
-		console.log(left, top);
 
 
 		var p1 = {
@@ -100,7 +102,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 			var abilityLeft = (((abilityDestX - left) / ability.speed) * currentFrame) + left;
 			var abilityTop = (((abilityDestY - top) / ability.speed) * currentFrame) + top;
 			// console.log(currentFrame, "I started at [", left, top, "] I am currently at [", abilityLeft, abilityTop, "] I am going to [", abilityDestX, abilityDestY, "]");
-			didItHit(ability, hero.target, abilityLeft, abilityTop, removeAbility);
+			didItHit(ability, hero.target, multiplier, abilityLeft, abilityTop, removeAbility);
 		}, 1);
 
 		setTimeout(removeAbility, ability.speed * 4);
@@ -116,8 +118,9 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		}
 
 		function setCooldown(ability) {
-			console.log(cooldownMap);
 			cooldownMap[ability.key] = true;
+			ability.powerMultiplier = 1;
+			ability.width = initialWidth;
 			setTimeout(function() {
 				cooldownMap[ability.key] = false;
 			}, ability.cooldown * 1000);
@@ -125,14 +128,14 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 
 	}
 
-	function didItHit(ability, target, left, top, callback) {
+	function didItHit(ability, target, multiplier, left, top, callback) {
 		var didHit = false;
 		var abilityHitBox = buildCircularHitBox(ability.width, left, top);
 		abilityHitBox.forEach(function(abilityBox) {
 			target.hitBox.forEach(function(targetBox) {
 				if (didHit !== true && Math.abs(targetBox["left"] - abilityBox["left"]) <= 2 && Math.abs(targetBox["top"] - abilityBox["top"]) <= 2) {
 					didHit = true;
-					damage(target, ability.damage, left, top);
+					damage(target, (ability.damage * multiplier), left, top);
 					if (ability.statusEffect) {
 						ability.statusEffect.effect(target, ability.statusEffect.value);
 					}
@@ -219,17 +222,41 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 			var key = event.keyCode;
 			if (key < 41) {
 				determineMovement(key);
-			}
-			else if (key > 48 < 54){
+			} else if (key > 48 && key < 54){
 				var ability = abilityMap[key];
-				if (cooldownMap[key] === false) {
-					attack(ability);
+				if (cooldownMap[key] === false && !preparingAttack) {
+					preparingAttack = true;
+					// (function() {
+
+						var multiplierInterval = setInterval(function() {
+							if (preparingAttack === true) {
+								ability.powerMultiplier += .25;
+							} else {
+								clearInterval(multiplierInterval);
+								ability.powerMultiplier = 1;
+							}
+						}, 200);
+
+						determineAttack(key, ability);
+
+					// }());
 				}
 			}
 		});
 
 		document.addEventListener("keyup", cancelMovement);
 
+	}
+
+	function determineAttack(key, ability, callback) {
+		document.addEventListener("keyup", attackListener);
+
+		function attackListener(event) {
+			if (key === event.keyCode && cooldownMap[key] === false) {
+				preparingAttack = false;
+				attack(ability, ability.powerMultiplier);
+			}
+		}
 	}
 
 	function buildCircularHitBox(width, centerX, centerY) {

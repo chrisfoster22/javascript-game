@@ -14,19 +14,26 @@ function Ability(args) {
 		freeze: function(target, value) {
 			var initialSpeed = target.speed;
 			target.speed -= 4;
-			console.log(target.speed);
 			setTimeout(function() {
 				target.speed = initialSpeed;
-			}, 750);
+			}, value * 1000);
+		},
+
+		poison: function(target, value) {
+			var poisonCounter = setInterval(function() {
+				target.damage(target, value)
+			}, 1000);
+			setTimeout(function() {
+				clearInterval(poisonCounter)
+			}, 3000);
 		}
-	};
+	}
 
 	if (args.statusEffect) {
 		this.statusEffect = {
 			effect: statusEffects[args.statusEffect.name],
 			value: args.statusEffect.value
 		}
-		console.log(this.statusEffect);
 	}
 
 	function buildCircularHitBox(width, centerX, centerY) {

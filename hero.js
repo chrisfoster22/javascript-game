@@ -12,6 +12,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 	abilityMap;
 
 	var cooldownMap = {};
+	hero.damage = damage;
 
 	hero.hitBox = buildCircularHitBox(50, startingPosition[0] + 25, startingPosition[1] + 25 );
 
@@ -141,7 +142,7 @@ function Hero(domNode, startingPosition, speed, controlling, abilites) {
 		})
 	}
 
-	function damage(target, damage, left, top) {
+	function damage(target, damage) {
 		target.hitPoints -= damage;
 
 		var damageDiv = document.createElement("div");

@@ -1,5 +1,5 @@
 var ice = new Ability({name:'ice', width: 20, range: 1000, speed: 300, cooldown: 1, key: 49, damage: 10, statusEffect: {name: "freeze", value: 0.75}});
-var megaFireball = new Ability({ name: 'fireball', width: 50, range: 400, speed: 500, cooldown: 3, key: 50, damage: 25});
+var megaFireball = new Ability({ name: 'poison', width: 50, range: 600, speed: 300, cooldown: 3, key: 50, damage: 25, statusEffect: {name: "poison", value: 5}});
 var superMegaFireball = new Ability({name: 'fireball', width: 100, range: 1000, speed: 400, cooldown: 5, key: 51, damage: 100});
 var abilities = [ice, megaFireball, superMegaFireball]
 
